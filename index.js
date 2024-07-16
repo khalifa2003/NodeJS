@@ -21,8 +21,6 @@ app.use(bodyParser.json());
 
 // Enable other domains to access your application
 app.use(cors());
-const serverless = require('./api/serverless');
-app.use('/api/serverless', serverless);
 
 // Middlewares
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
