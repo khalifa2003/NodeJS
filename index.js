@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 // Enable other domains to access your application
 app.use(cors());
 const serverless = require('./api/serverless');
+app.use('/api/serverless', serverless);
 
 // Middlewares
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -30,7 +31,6 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   console.log(`mode: ${process.env.NODE_ENV}`);
 }
-app.use('/api/serverless', yourFunction);
 
 // Mount Routes
 mountRoutes(app);
