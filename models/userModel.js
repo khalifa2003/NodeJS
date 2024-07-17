@@ -64,7 +64,7 @@ userSchema.pre("save", async function (next) {
 const setImageURL = (doc) => {
   if (doc.profileImage) {
     if (doc.profileImage.slice(0, 4) != "http") {
-      const imageUrl = `${process.env.BASE_URL}/uploads/users/${doc.profileImage}`;
+      const imageUrl = `https://node-js-beige.vercel.app/uploads/users/${doc.profileImage}`;
       doc.profileImage = imageUrl;
     }
   }

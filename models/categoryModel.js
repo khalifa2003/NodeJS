@@ -22,7 +22,7 @@ const categorySchema = new mongoose.Schema(
 const setImageURL = (doc) => {
   if (doc.image) {
     if (doc.image.slice(0,4) != 'http') {
-      const imageUrl = `${process.env.BASE_URL}/uploads/categories/${doc.image}`;
+      const imageUrl = `https://node-js-beige.vercel.app/uploads/categories/${doc.image}`;
       doc.image = imageUrl;
     }
   }

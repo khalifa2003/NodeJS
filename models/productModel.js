@@ -68,7 +68,7 @@ const setImageURL = (doc) => {
     // Updated to handle "images"
     doc.images = doc.images.map((image) => {
       if (image.slice(0, 4) != "http") {
-        return `${process.env.BASE_URL}/uploads/products/${image}`;
+        return `https://node-js-beige.vercel.app/uploads/products/${image}`;
       }
       return image;
     });
