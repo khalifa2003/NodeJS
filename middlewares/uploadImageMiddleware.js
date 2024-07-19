@@ -15,7 +15,6 @@ const multerStorage = multer.diskStorage({
 const multerFilter = function (req, file, cb) {
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
-    console.log("hello");
   } else {
     cb(new ApiError("Only Images allowed", 400), false);
   }
