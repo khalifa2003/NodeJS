@@ -19,23 +19,23 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const setImageURL = (doc) => {
-  if (doc.image) {
-    if (doc.image.slice(0,4) != 'http') {
-      const imageUrl = `https://node-js-beige.vercel.app/uploads/categories/${doc.image}`;
-      doc.image = imageUrl;
-    }
-  }
-};
+// const setImageURL = (doc) => {
+//   if (doc.image) {
+//     if (doc.image.slice(0,4) != 'http') {
+//       const imageUrl = `https://node-js-beige.vercel.app/uploads/categories/${doc.image}`;
+//       doc.image = imageUrl;
+//     }
+//   }
+// };
 // findOne, findAll and update
-categorySchema.post("init", (doc) => {
-  setImageURL(doc);
-});
+// categorySchema.post("init", (doc) => {
+//   setImageURL(doc);
+// });
 
 // create
-categorySchema.post("save", (doc) => {
-  setImageURL(doc);
-});
+// categorySchema.post("save", (doc) => {
+//   setImageURL(doc);
+// });
 
 const CategoryModel = mongoose.model("Category", categorySchema);
 

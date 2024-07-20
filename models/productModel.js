@@ -63,20 +63,20 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-const setImageURL = (doc) => {
-  if (doc.images && doc.images.length > 0) {
-    // Updated to handle "images"
-    doc.images = doc.images.map((image) => {
-      if (image.slice(0, 4) != "http") {
-        return `https://node-js-beige.vercel.app/uploads/products/${image}`;
-      }
-      return image;
-    });
-  }
-};
+// const setImageURL = (doc) => {
+//   if (doc.images && doc.images.length > 0) {
+//     // Updated to handle "images"
+//     doc.images = doc.images.map((image) => {
+//       if (image.slice(0, 4) != "http") {
+//         return `https://node-js-beige.vercel.app/uploads/products/${image}`;
+//       }
+//       return image;
+//     });
+//   }
+// };
 
 // Middleware to set image URLs after initializing or saving
-productSchema.post("init", setImageURL); // Runs after findOne and find
-productSchema.post("save", setImageURL); // Runs after save
+// productSchema.post("init", setImageURL); // Runs after findOne and find
+// productSchema.post("save", setImageURL); // Runs after save
 
 module.exports = mongoose.model("Product", productSchema);

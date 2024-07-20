@@ -30,9 +30,6 @@ exports.signup = asyncHandler(async (req, res, next) => {
 // @access  Public/Admin
 exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  console.log("--------------------------");
-  console.log(user);
-  console.log("--------------------------");
   if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
     return next(new ApiError("Invalid email or password", 401));
   }
@@ -43,7 +40,6 @@ exports.login = asyncHandler(async (req, res, next) => {
 });
 
 exports.protect = asyncHandler(async (req, res, next) => {
-  // console.log(req.body);
   let token;
   if (
     req.headers.authorization &&
@@ -86,8 +82,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
 exports.allowedTo = (...roles) =>
   asyncHandler(async (req, res, next) => {
-    // 1) access roles
-    // 2) access registered user (req.user.role)
     if (!roles.includes(req.user.role)) {
       return next(
         new ApiError("You are not allowed to access this route", 403)

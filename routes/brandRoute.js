@@ -6,8 +6,8 @@ const {
   createBrand,
   updateBrand,
   deleteBrand,
-  uploadBrandImage,
-  resizeImage,
+  // uploadBrandImage,
+  // resizeImage,
 } = require("../services/brandService");
 const {
   getBrandValidator,
@@ -25,8 +25,8 @@ router
   .post(
     authService.protect,
     authService.allowedTo("admin", "manager"),
-    uploadBrandImage,
-    resizeImage,
+    // uploadBrandImage,
+    // resizeImage,
     createBrandValidator,
     createBrand
   );
@@ -36,7 +36,7 @@ router
   .put(
     authService.protect,
     authService.allowedTo("admin", "manager"),
-    uploadBrandImage,
+    // uploadBrandImage,
     updateBrandValidator,
     updateBrand
   )

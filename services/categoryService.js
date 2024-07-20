@@ -5,29 +5,29 @@ const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const fs = require("fs");
 const path = require("path");
 
-exports.uploadCategoryImage = uploadSingleImage("image");
+// exports.uploadCategoryImage = uploadSingleImage("image");
 
-exports.resizeImage = asyncHandler(async (req, res, next) => {
-  if (!req.file) {
-    return next(new ApiError("No file uploaded", 400));
-  }
+// exports.resizeImage = asyncHandler(async (req, res, next) => {
+//   if (!req.file) {
+//     return next(new ApiError("No file uploaded", 400));
+//   }
 
-  const filename = `category-${Date.now()}-${req.file.originalname}`;
-  req.body.image = filename;
+//   const filename = `category-${Date.now()}-${req.file.originalname}`;
+//   req.body.image = filename;
 
-  const filePath = path.join(
-    __dirname,
-    "..",
-    "uploads",
-    "categories",
-    filename
-  );
+//   const filePath = path.join(
+//     __dirname,
+//     "..",
+//     "uploads",
+//     "categories",
+//     filename
+//   );
 
-  fs.rename(req.file.path, filePath, (err) => {
-    if (err) return next(new ApiError("Error saving file", 500));
-    next();
-  });
-});
+//   fs.rename(req.file.path, filePath, (err) => {
+//     if (err) return next(new ApiError("Error saving file", 500));
+//     next();
+//   });
+// });
 
 // @desc    Get Categories
 // @route   GET /api/v1/categories
@@ -68,6 +68,7 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({ data: document });
 });
+
 // @desc    delete Category
 // @route   DELETE /api/v1/categories/:id
 // @access  Private/Admin

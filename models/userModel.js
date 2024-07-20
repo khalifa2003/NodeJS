@@ -61,23 +61,23 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const setImageURL = (doc) => {
-  if (doc.profileImage) {
-    if (doc.profileImage.slice(0, 4) != "http") {
-      const imageUrl = `https://node-js-beige.vercel.app/uploads/users/${doc.profileImage}`;
-      doc.profileImage = imageUrl;
-    }
-  }
-};
+// const setImageURL = (doc) => {
+//   if (doc.profileImage) {
+//     if (doc.profileImage.slice(0, 4) != "http") {
+//       const imageUrl = `https://node-js-beige.vercel.app/uploads/users/${doc.profileImage}`;
+//       doc.profileImage = imageUrl;
+//     }
+//   }
+// };
 // findOne, findAll and update
-userSchema.post("init", (doc) => {
-  setImageURL(doc);
-});
+// userSchema.post("init", (doc) => {
+//   setImageURL(doc);
+// });
 
-// create
-userSchema.post("save", (doc) => {
-  setImageURL(doc);
-});
+// // create
+// userSchema.post("save", (doc) => {
+//   setImageURL(doc);
+// });
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

@@ -5,23 +5,23 @@ const asyncHandler = require("express-async-handler");
 const Brand = require("../models/brandModel");
 const ApiError = require("../utils/apiError");
 
-exports.uploadBrandImage = uploadSingleImage("image");
+// exports.uploadBrandImage = uploadSingleImage("image");
 
-exports.resizeImage = asyncHandler(async (req, res, next) => {
-  if (!req.file) {
-    return next(new ApiError("No file uploaded", 400));
-  }
+// exports.resizeImage = asyncHandler(async (req, res, next) => {
+//   if (!req.file) {
+//     return next(new ApiError("No file uploaded", 400));
+//   }
 
-  const filename = `brand-${Date.now()}-${req.file.originalname}`;
-  req.body.image = filename;
+//   const filename = `brand-${Date.now()}-${req.file.originalname}`;
+//   req.body.image = filename;
 
-  const filePath = path.join(__dirname, "..", "uploads", "brands", filename);
+//   const filePath = path.join(__dirname, "..", "uploads", "brands", filename);
 
-  fs.rename(req.file.path, filePath, (err) => {
-    if (err) return next(new ApiError("Error saving file", 500));
-    next();
-  });
-});
+//   fs.rename(req.file.path, filePath, (err) => {
+//     if (err) return next(new ApiError("Error saving file", 500));
+//     next();
+//   });
+// });
 
 // @desc    Get All Brands
 // @route   GET /api/v1/brands

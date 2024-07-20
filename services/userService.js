@@ -6,23 +6,23 @@ const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
 
-exports.uploadUserImage = uploadSingleImage("profileImage");
+// exports.uploadUserImage = uploadSingleImage("profileImage");
 
-exports.resizeImage = asyncHandler(async (req, res, next) => {
-  if (!req.file) {
-    return next();
-  }
-  const filename = `user-${Date.now()}-${req.file.originalname}`;
-  req.body.profileImage = filename;
-  const filePath = path.join(__dirname, "..", "uploads", "users", filename);
+// exports.resizeImage = asyncHandler(async (req, res, next) => {
+//   if (!req.file) {
+//     return next();
+//   }
+//   const filename = `user-${Date.now()}-${req.file.originalname}`;
+//   req.body.profileImage = filename;
+//   const filePath = path.join(__dirname, "..", "uploads", "users", filename);
 
-  fs.rename(req.file.path, filePath, (err) => {
-    if (err) {
-      return next(new ApiError("Error saving file", 500));
-    }
-    next();
-  });
-});
+//   fs.rename(req.file.path, filePath, (err) => {
+//     if (err) {
+//       return next(new ApiError("Error saving file", 500));
+//     }
+//     next();
+//   });
+// });
 
 // @desc    Get list of users
 // @route   GET /api/v1/users
@@ -149,7 +149,6 @@ exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
     },
     { new: true }
   );
-
   res.status(200).json({ data: updatedUser });
 });
 

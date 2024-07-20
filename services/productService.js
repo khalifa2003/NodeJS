@@ -4,37 +4,37 @@ const { uploadMixOfImages } = require("../middlewares/uploadImageMiddleware");
 const Product = require("../models/productModel");
 const ApiError = require("../utils/apiError");
 
-exports.uploadProductImages = uploadMixOfImages([
-  { name: "images", maxCount: 6 },
-]);
+// exports.uploadProductImages = uploadMixOfImages([
+//   { name: "images", maxCount: 6 },
+// ]);
 
-exports.resizeProductImages = asyncHandler(async (req, res, next) => {
-  if (!req.files || !req.files.images) {
-    return next(new ApiError("No files uploaded", 400));
-  }
-  req.body.images = [];
-  // Iterate through uploaded files and process each one
-  req.files.images.forEach((file) => {
-    const filename = `product-${Date.now()}-${file.originalname}`;
-    req.body.images.push(filename);
+// exports.resizeProductImages = asyncHandler(async (req, res, next) => {
+//   if (!req.files || !req.files.images) {
+//     return next(new ApiError("No files uploaded", 400));
+//   }
+//   req.body.images = [];
+//   // Iterate through uploaded files and process each one
+//   req.files.images.forEach((file) => {
+//     const filename = `product-${Date.now()}-${file.originalname}`;
+//     req.body.images.push(filename);
 
-    // Move the file to the desired directory
-    const fs = require("fs");
-    const path = require("path");
-    const filePath = path.join(
-      __dirname,
-      "..",
-      "uploads",
-      "products",
-      filename
-    );
+//     // Move the file to the desired directory
+//     const fs = require("fs");
+//     const path = require("path");
+//     const filePath = path.join(
+//       __dirname,
+//       "..",
+//       "uploads",
+//       "products",
+//       filename
+//     );
 
-    fs.rename(file.path, filePath, (err) => {
-      if (err) return next(new ApiError("Error saving file", 500));
-    });
-  });
-  next();
-});
+//     fs.rename(file.path, filePath, (err) => {
+//       if (err) return next(new ApiError("Error saving file", 500));
+//     });
+//   });
+//   next();
+// });
 
 // @desc    Get All Products
 // @route   GET /api/v1/products
