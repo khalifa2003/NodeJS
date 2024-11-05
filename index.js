@@ -14,6 +14,7 @@ const mountRoutes = require("./routes");
 
 // Connect with db
 dbConnection();
+
 // express app
 const app = express();
 const bodyParser = require("body-parser");
