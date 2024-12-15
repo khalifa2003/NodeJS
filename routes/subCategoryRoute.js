@@ -6,7 +6,6 @@ const {
   getSubCategories,
   updateSubCategory,
   deleteSubCategory,
-  getSubCategoryByCategory,
 } = require("../services/subCategoryService");
 const {
   createSubCategoryValidator,
