@@ -1,45 +1,43 @@
-const asyncHandler = require("express-async-handler");
-const SubCategory = require("../models/subCategoryModel");
-const ApiError = require("../utils/apiError");
 
-exports.getSubCategories = asyncHandler(async (req, res) => {
-  const documents = await SubCategory.find(req.query);
-  res.status(200).json({ results: documents.length, data: documents });
-});
+const factory = require('./handlersFactory');
+const SubCategory = require('../models/subCategoryModel');
 
-exports.getSubCategory = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const document = await SubCategory.findById(id);
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
+exports.setCategoryIdToBody = (req, res, next) => {
+  // Nested route (Create)
+  if (!req.body.category) req.body.category = req.params.categoryId;
+  next();
+};
 
-exports.createSubCategory = asyncHandler(async (req, res) => {
-  const newDoc = await SubCategory.create(req.body);
-  res.status(201).json({ data: newDoc });
-});
+// Nested route
+// GET /api/v1/categories/:categoryId/subcategories
+exports.createFilterObj = (req, res, next) => {
+  let filterObject = {};
+  if (req.params.categoryId) filterObject = { category: req.params.categoryId };
+  req.filterObj = filterObject;
+  next();
+};
 
-exports.updateSubCategory = asyncHandler(async (req, res, next) => {
-  const document = await SubCategory.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-    }
-  );
-  if (!document) {
-    return next(new ApiError(`No document for this id ${req.params.id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
+// @desc    Get list of subcategories
+// @route   GET /api/v1/subcategories
+// @access  Public
+exports.getSubCategories = factory.getAll(SubCategory);
 
-exports.deleteSubCategory = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const document = await SubCategory.findByIdAndDelete(id);
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(204).send();
-});
+// @desc    Get specific subcategory by id
+// @route   GET /api/v1/subcategories/:id
+// @access  Public
+exports.getSubCategory = factory.getOne(SubCategory);
+
+// @desc    Create subCategory
+// @route   POST  /api/v1/subcategories
+// @access  Private
+exports.createSubCategory = factory.createOne(SubCategory);
+
+// @desc    Update specific subcategory
+// @route   PUT /api/v1/subcategories/:id
+// @access  Private
+exports.updateSubCategory = factory.updateOne(SubCategory);
+
+// @desc    Delete specific subCategory
+// @route   DELETE /api/v1/subcategories/:id
+// @access  Private
+exports.deleteSubCategory = factory.deleteOne(SubCategory);

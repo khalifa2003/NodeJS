@@ -1,26 +1,35 @@
-const express = require("express");
 
-const {
-  updateCartItemQuantity,
-  removeSpecificCartItem,
-  getLoggedUserCart,
-  addProductToCart,
-  clearCart,
-} = require("../services/cartService");
-const authService = require("../services/authService");
-
+const express = require('express');
+const { getCategoryValidator, createCategoryValidator, updateCategoryValidator, deleteCategoryValidator } = require('../utils/validators/categoryValidator');
+const { getCategories, getCategory, createCategory, updateCategory, deleteCategory, uploadCategoryImage, resizeImage } = require('../services/categoryService');
+const authService = require('../services/authService');
+const subcategoriesRoute = require('./subCategoryRoute');
 const router = express.Router();
+router.use('/:categoryId/subcategories', subcategoriesRoute);
 
-router.use(authService.protect, authService.allowedTo("user"));
-router
-  .route("/")
-  .post(addProductToCart)
-  .get(getLoggedUserCart)
-  .delete(clearCart);
-
-router
-  .route("/:itemId")
-  .put(updateCartItemQuantity)
-  .delete(removeSpecificCartItem);
+router.route('/').get(getCategories)
+  .post(
+    authService.protect,
+    authService.allowedTo('admin', 'manager'),
+    uploadCategoryImage,
+    resizeImage,
+    createCategoryValidator,
+    createCategory
+  );
+router.route('/:id').get(getCategoryValidator, getCategory)
+  .put(
+    authService.protect,
+    authService.allowedTo('admin', 'manager'),
+    uploadCategoryImage,
+    resizeImage,
+    updateCategoryValidator,
+    updateCategory
+  )
+  .delete(
+    authService.protect,
+    authService.allowedTo('admin'),
+    deleteCategoryValidator,
+    deleteCategory
+  );
 
 module.exports = router;

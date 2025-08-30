@@ -1,5 +1,24 @@
-const Review = require("../models/reviewModel");
-const asyncHandler = require("express-async-handler");
+const factory = require('./handlersFactory');
+const Review = require('../models/reviewModel');
+
+// Nested route
+// GET /api/v1/products/:productId/reviews
+exports.createFilterObj = (req, res, next) => {
+  let filterObject = {};
+  if (req.params.productId) filterObject = { product: req.params.productId };
+  req.filterObj = filterObject;
+  next();
+};
+
+// @desc    Get list of reviews
+// @route   GET /api/v1/reviews
+// @access  Public
+exports.getReviews = factory.getAll(Review);
+
+// @desc    Get specific review by id
+// @route   GET /api/v1/reviews/:id
+// @access  Public
+exports.getReview = factory.getOne(Review);
 
 // Nested route (Create)
 exports.setProductIdAndUserIdToBody = (req, res, next) => {
@@ -7,55 +26,17 @@ exports.setProductIdAndUserIdToBody = (req, res, next) => {
   if (!req.body.user) req.body.user = req.user._id;
   next();
 };
-// @desc    Get list of reviews
-// @route   GET /api/v1/reviews
-// @access  Public
-exports.getReviews = asyncHandler(async (req, res) => {
-  const product = req.query.productId;
-  const documents = await Review.find({ product });
-  res.status(200).json({ results: documents.length, data: documents });
-});
-
-// @desc    Get specific review by id
-// @route   GET /api/v1/reviews/:id
-// @access  Public
-exports.getReview = asyncHandler(async (req, res, next) => {
-  const document = await Review.find({ product: req.params.productId });
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
-
 // @desc    Create review
 // @route   POST  /api/v1/reviews
 // @access  Private/Protect/User
-exports.createReview = asyncHandler(async (req, res) => {
-  const newDoc = await Review.create(req.body);
-  res.status(201).json({ data: newDoc });
-});
+exports.createReview = factory.createOne(Review);
 
-// // @desc    Update specific review
-// // @route   PUT /api/v1/reviews/:id
-// // @access  Private/Protect/User
-exports.updateReview = asyncHandler(async (req, res, next) => {
-  const document = await Review.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (!document) {
-    return next(new ApiError(`No document for this id ${req.params.id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
+// @desc    Update specific review
+// @route   PUT /api/v1/reviews/:id
+// @access  Private/Protect/User
+exports.updateReview = factory.updateOne(Review);
 
 // @desc    Delete specific review
 // @route   DELETE /api/v1/reviews/:id
 // @access  Private/Protect/User-Admin-Manager
-exports.deleteReview = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const document = await Review.findByIdAndDelete(id);
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(204).send();
-});
+exports.deleteReview = factory.deleteOne(Review);

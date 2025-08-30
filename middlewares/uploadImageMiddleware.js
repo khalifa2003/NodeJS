@@ -1,26 +1,24 @@
-const multer = require("multer");
-const ApiError = require("../utils/apiError");
-const path = require("path");
+const multer = require('multer');
+const ApiError = require('../utils/apiError');
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/brands");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
+const multerOptions = () => {
 
-const multerFilter = function (req, file, cb) {
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(new ApiError("Only Images allowed", 400), false);
-  }
+  const multerStorage = multer.memoryStorage();
+
+  const multerFilter = function (req, file, cb) {
+    if (file.mimetype.startsWith('image')) {
+      cb(null, true);
+    } else {
+      cb(new ApiError('Only Images allowed', 400), false);
+    }
+  };
+
+  const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+  return upload;
 };
 
-const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+exports.uploadSingleImage = (fieldName) => multerOptions().single(fieldName);
 
-exports.uploadSingleImage = (fieldName) => upload.single(fieldName);
-exports.uploadMixOfImages = (arrayOfFields) => upload.fields(arrayOfFields);
+exports.uploadMixOfImages = (arrayOfFields) =>
+  multerOptions().fields(arrayOfFields);

@@ -1,82 +1,53 @@
-const asyncHandler = require("express-async-handler");
-const Category = require("../models/categoryModel");
-const ApiError = require("../utils/apiError");
-const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
-const fs = require("fs");
-const path = require("path");
+const sharp = require('sharp');
+const { v4: uuidv4 } = require('uuid');
+const asyncHandler = require('express-async-handler');
 
-// exports.uploadCategoryImage = uploadSingleImage("image");
+const factory = require('./handlersFactory');
+const { uploadSingleImage } = require('../middlewares/uploadImageMiddleware');
+const Category = require('../models/categoryModel');
 
-// exports.resizeImage = asyncHandler(async (req, res, next) => {
-//   if (!req.file) {
-//     return next(new ApiError("No file uploaded", 400));
-//   }
+// Upload single image
+exports.uploadCategoryImage = uploadSingleImage('image');
 
-//   const filename = `category-${Date.now()}-${req.file.originalname}`;
-//   req.body.image = filename;
+// Image processing
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
 
-//   const filePath = path.join(
-//     __dirname,
-//     "..",
-//     "uploads",
-//     "categories",
-//     filename
-//   );
+  if (req.file) {
+    await sharp(req.file.buffer)
+      .resize(600, 600)
+      .toFormat('jpeg')
+      .jpeg({ quality: 95 })
+      .toFile(`uploads/categories/${filename}`);
 
-//   fs.rename(req.file.path, filePath, (err) => {
-//     if (err) return next(new ApiError("Error saving file", 500));
-//     next();
-//   });
-// });
+    // Save image into our db
+    req.body.image = filename;
+  }
 
-// @desc    Get Categories
+  next();
+});
+
+// @desc    Get list of categories
 // @route   GET /api/v1/categories
-// @access  Private/Admin
-exports.getCategories = asyncHandler(async (req, res) => {
-  const documents = await Category.find({});
-  res.status(200).json({ results: documents.length, data: documents });
-});
+// @access  Public
+exports.getCategories = factory.getAll(Category);
 
-// @desc    Get Specific Category
+// @desc    Get specific category by id
 // @route   GET /api/v1/categories/:id
-// @access  Private/Admin
-exports.getCategory = asyncHandler(async (req, res, next) => {
-  const document = await Category.findById(req.params.id);
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
+// @access  Public
+exports.getCategory = factory.getOne(Category);
 
-// @desc    Create Category
-// @route   POST /api/v1/categories
-// @access  Private/Admin
-exports.createCategory = asyncHandler(async (req, res) => {
-  const newDoc = await Category.create(req.body);
-  res.status(201).json({ data: newDoc });
-});
+// @desc    Create category
+// @route   POST  /api/v1/categories
+// @access  Private/Admin-Manager
+exports.createCategory = factory.createOne(Category);
 
-// @desc    Update Category
+// @desc    Update specific category
 // @route   PUT /api/v1/categories/:id
-// @access  Private/Admin
-exports.updateCategory = asyncHandler(async (req, res, next) => {
-  const document = await Category.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (!document) {
-    return next(new ApiError(`No document for this id ${req.params.id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
+// @access  Private/Admin-Manager
+exports.updateCategory = factory.updateOne(Category);
 
-// @desc    delete Category
+// @desc    Delete specific category
 // @route   DELETE /api/v1/categories/:id
 // @access  Private/Admin
-exports.deleteCategory = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const document = await Category.findByIdAndDelete(id);
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(204).send();
-});
+exports.deleteCategory = factory.deleteOne(Category);

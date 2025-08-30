@@ -1,77 +1,40 @@
-const fs = require("fs");
-const path = require("path");
-const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
-const asyncHandler = require("express-async-handler");
-const Brand = require("../models/brandModel");
-const ApiError = require("../utils/apiError");
+const asyncHandler = require('express-async-handler');
+const { v4: uuidv4 } = require('uuid');
+const sharp = require('sharp');
+const factory = require('./handlersFactory');
+const { uploadSingleImage } = require('../middlewares/uploadImageMiddleware');
+const Brand = require('../models/brandModel');
 
-// exports.uploadBrandImage = uploadSingleImage("image");
+exports.uploadBrandImage = uploadSingleImage('image');
 
-// exports.resizeImage = asyncHandler(async (req, res, next) => {
-//   if (!req.file) {
-//     return next(new ApiError("No file uploaded", 400));
-//   }
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  const filename = `brand-${uuidv4()}-${Date.now()}.jpeg`;
+  await sharp(req.file.buffer).resize(600, 600).toFormat('jpeg').jpeg({ quality: 95 }).toFile(`uploads/brands/${filename}`);
+  req.body.image = filename;
+  next();
+});
 
-//   const filename = `brand-${Date.now()}-${req.file.originalname}`;
-//   req.body.image = filename;
-
-//   const filePath = path.join(__dirname, "..", "uploads", "brands", filename);
-
-//   fs.rename(req.file.path, filePath, (err) => {
-//     if (err) return next(new ApiError("Error saving file", 500));
-//     next();
-//   });
-// });
-
-// @desc    Get All Brands
+// @desc    Get list of brands
 // @route   GET /api/v1/brands
-// @access  Private/Admin
-exports.getBrands = asyncHandler(async (req, res) => {
-  const documents = await Brand.find({});
-  res.status(200).json({ results: documents.length, data: documents });
-});
+// @access  Public
+exports.getBrands = factory.getAll(Brand);
 
-// @desc    Get Specific Brand
+// @desc    Get specific brand by id
 // @route   GET /api/v1/brands/:id
-// @access  Private/Admin
-exports.getBrand = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const document = await Brand.findById(id);
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
+// @access  Public
+exports.getBrand = factory.getOne(Brand);
 
-// @desc    Create Brand
-// @route   POST /api/v1/brands
-// @access  Private/Admin
-exports.createBrand = asyncHandler(async (req, res) => {
-  const newDoc = await Brand.create(req.body);
-  res.status(201).json({ data: newDoc });
-});
+// @desc    Create brand
+// @route   POST  /api/v1/brands
+// @access  Private
+exports.createBrand = factory.createOne(Brand);
 
-// @desc    Update Brand
+// @desc    Update specific brand
 // @route   PUT /api/v1/brands/:id
-// @access  Private/Admin
-exports.updateBrand = asyncHandler(async (req, res, next) => {
-  const document = await Brand.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (!document) {
-    return next(new ApiError(`No document for this id ${req.params.id}`, 404));
-  }
-  res.status(200).json({ data: document });
-});
+// @access  Private
+exports.updateBrand = factory.updateOne(Brand);
 
-// @desc    Delete Brand
+// @desc    Delete specific brand
 // @route   DELETE /api/v1/brands/:id
-// @access  Private/Admin
-exports.deleteBrand = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const document = await Brand.findByIdAndDelete(id);
-  if (!document) {
-    return next(new ApiError(`No document for this id ${id}`, 404));
-  }
-  res.status(204).send();
-});
+// @access  Private
+exports.deleteBrand = factory.deleteOne(Brand);
