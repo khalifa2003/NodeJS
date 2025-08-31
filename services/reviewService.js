@@ -10,14 +10,12 @@ exports.createFilterObj = (req, res, next) => {
   next();
 };
 
-// @desc    Get list of reviews
-// @route   GET /api/v1/reviews
-// @access  Public
+// Get list of reviews
+// GET /api/v1/reviews
 exports.getReviews = factory.getAll(Review);
 
-// @desc    Get specific review by id
-// @route   GET /api/v1/reviews/:id
-// @access  Public
+// Get specific review by id
+// GET /api/v1/reviews/:id
 exports.getReview = factory.getOne(Review);
 
 // Nested route (Create)
@@ -26,17 +24,17 @@ exports.setProductIdAndUserIdToBody = (req, res, next) => {
   if (!req.body.user) req.body.user = req.user._id;
   next();
 };
-// @desc    Create review
-// @route   POST  /api/v1/reviews
-// @access  Private/Protect/User
+// Create review
+// POST  /api/v1/reviews
+// Private/Protect/User
 exports.createReview = factory.createOne(Review);
 
-// @desc    Update specific review
-// @route   PUT /api/v1/reviews/:id
-// @access  Private/Protect/User
+// Update specific review
+// PUT /api/v1/reviews/:id
+// Private/Protect/User
 exports.updateReview = factory.updateOne(Review);
 
-// @desc    Delete specific review
-// @route   DELETE /api/v1/reviews/:id
-// @access  Private/Protect/User-Admin-Manager
+// Delete specific review
+// DELETE /api/v1/reviews/:id
+// Private/Protect/User-Admin-Manager
 exports.deleteReview = factory.deleteOne(Review);

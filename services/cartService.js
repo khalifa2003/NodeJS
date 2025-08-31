@@ -14,9 +14,9 @@ const calcTotalCartPrice = (cart) => {
   return totalPrice;
 };
 
-// @desc    Add product to  cart
-// @route   POST /api/v1/cart
-// @access  Private/User
+// Add product to cart
+// POST /api/v1/cart
+// Private/User
 exports.addProductToCart = asyncHandler(async (req, res, next) => {
   const { productId, color } = req.body;
   const product = await Product.findById(productId);
@@ -45,9 +45,9 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Get logged user cart
-// @route   GET /api/v1/cart
-// @access  Private/User
+// Get logged user cart
+// GET /api/v1/cart
+// Private/User
 exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
   const cart = await Cart.findOne({ user: req.user._id });
   if (!cart) return next( new ApiError(`There is no cart for this user id : ${req.user._id}`, 404));
@@ -58,9 +58,9 @@ exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Remove specific cart item
-// @route   DELETE /api/v1/cart/:itemId
-// @access  Private/User
+// Remove specific cart item
+// DELETE /api/v1/cart/:itemId
+// Private/User
 exports.removeSpecificCartItem = asyncHandler(async (req, res, next) => {
   const cart = await Cart.findOneAndUpdate(
     { user: req.user._id },
@@ -76,17 +76,17 @@ exports.removeSpecificCartItem = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    clear logged user cart
-// @route   DELETE /api/v1/cart
-// @access  Private/User
+// clear logged user cart
+// DELETE /api/v1/cart
+// Private/User
 exports.clearCart = asyncHandler(async (req, res, next) => {
   await Cart.findOneAndDelete({ user: req.user._id });
   res.status(204).send();
 });
 
-// @desc    Update specific cart item quantity
-// @route   PUT /api/v1/cart/:itemId
-// @access  Private/User
+// Update specific cart item quantity
+// PUT /api/v1/cart/:itemId
+// Private/User
 exports.updateCartItemQuantity = asyncHandler(async (req, res, next) => {
   const { quantity } = req.body;
   const cart = await Cart.findOne({ user: req.user._id });
@@ -107,9 +107,9 @@ exports.updateCartItemQuantity = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Apply coupon on logged user cart
-// @route   PUT /api/v1/cart/applyCoupon
-// @access  Private/User
+// Apply coupon on logged user cart
+// PUT /api/v1/cart/applyCoupon
+// Private/User
 exports.applyCoupon = asyncHandler(async (req, res, next) => {
   const coupon = await Coupon.findOne({
     name: req.body.coupon,

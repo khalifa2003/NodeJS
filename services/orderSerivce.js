@@ -8,9 +8,9 @@ const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
 
-// @desc    create cash order
-// @route   POST /api/v1/orders/cartId
-// @access  Protected/User
+// create cash order
+// POST /api/v1/orders/cartId
+// Protected/User
 exports.createCashOrder = asyncHandler(async (req, res, next) => {
   const taxPrice = 0;
   const shippingPrice = 0;
@@ -41,19 +41,19 @@ exports.filterOrderForLoggedUser = asyncHandler(async (req, res, next) => {
   if (req.user.role === 'user') req.filterObj = { user: req.user._id };
   next();
 });
-// @desc    Get all orders
-// @route   POST /api/v1/orders
-// @access  Protected/User-Admin-Manager
+// Get all orders
+// POST /api/v1/orders
+// Protected/User-Admin-Manager
 exports.findAllOrders = factory.getAll(Order);
 
-// @desc    Get all orders
-// @route   POST /api/v1/orders
-// @access  Protected/User-Admin-Manager
+// Get all orders
+// POST /api/v1/orders
+// Protected/User-Admin-Manager
 exports.findSpecificOrder = factory.getOne(Order);
 
-// @desc    Update order paid status to paid
-// @route   PUT /api/v1/orders/:id/pay
-// @access  Protected/Admin-Manager
+// Update order paid status to paid
+// PUT /api/v1/orders/:id/pay
+// Protected/Admin-Manager
 exports.updateOrderToPaid = asyncHandler(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
   if (!order) return next(new ApiError( `There is no such a order with this id:${req.params.id}`, 404 ) );
@@ -63,9 +63,9 @@ exports.updateOrderToPaid = asyncHandler(async (req, res, next) => {
   res.status(200).json({ status: 'success', data: updatedOrder });
 });
 
-// @desc    Update order delivered status
-// @route   PUT /api/v1/orders/:id/deliver
-// @access  Protected/Admin-Manager
+// Update order delivered status
+// PUT /api/v1/orders/:id/deliver
+// Protected/Admin-Manager
 exports.updateOrderToDelivered = asyncHandler(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
   if (!order) return next(new ApiError(`There is no such a order with this id:${req.params.id}`, 404));
@@ -78,9 +78,9 @@ exports.updateOrderToDelivered = asyncHandler(async (req, res, next) => {
   res.status(200).json({ status: 'success', data: updatedOrder });
 });
 
-// @desc    Get checkout session from stripe and send it as response
-// @route   GET /api/v1/orders/checkout-session/cartId
-// @access  Protected/User
+// Get checkout session from stripe and send it as response
+// GET /api/v1/orders/checkout-session/cartId
+// Protected/User
 exports.checkoutSession = asyncHandler(async (req, res, next) => {
   const taxPrice = 0;
   const shippingPrice = 0;
@@ -136,9 +136,9 @@ const createCardOrder = async (session) => {
   }
 };
 
-// @desc    This webhook will run when stripe payment success paid
-// @route   POST /webhook-checkout
-// @access  Protected/User
+// This webhook will run when stripe payment success paid
+// POST /webhook-checkout
+// Protected/User
 exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   const sig = req.headers['stripe-signature'];
   let event;

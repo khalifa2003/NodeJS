@@ -17,10 +17,17 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Auto populate user & product details when querying orders
 orderSchema.pre(/^find/, function (next) {
   this.populate({ path: 'user', select: 'name profileImg email phone'})
   .populate({ path: 'cartItems.product', select: 'title imageCover '});
   next();
+});
+// Virtual to check order status
+orderSchema.virtual('status').get(function () {
+  if (this.isDelivered) return 'Delivered';
+  if (this.isPaid) return 'Paid';
+  return 'Pending';
 });
 
 module.exports = mongoose.model('Order', orderSchema);

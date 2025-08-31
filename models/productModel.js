@@ -24,17 +24,20 @@ const productSchema = new mongoose.Schema(
   toObject: { virtuals: true },
   }
 );
+// Virtual populate reviews
 productSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'product',
   localField: '_id',
 });
 
+// Auto populate category
 productSchema.pre(/^find/, function (next) {
   this.populate({ path: 'category', select: 'name -_id'});
   next();
 });
 
+// Format image URLs
 const setImageURL = (doc) => {
   if (doc.imageCover) {
     const imageUrl = `${process.env.BASE_URL}/products/${doc.imageCover}`;
@@ -49,11 +52,7 @@ const setImageURL = (doc) => {
     doc.images = imagesList;
   }
 };
-productSchema.post('init', (doc) => {
-  setImageURL(doc);
-});
-productSchema.post('save', (doc) => {
-  setImageURL(doc);
-});
+productSchema.post('init', (doc) => setImageURL(doc));
+productSchema.post('save', (doc) => setImageURL(doc));
 
 module.exports = mongoose.model('Product', productSchema);

@@ -7,9 +7,8 @@ const sendEmail = require('../utils/sendEmail');
 const createToken = require('../utils/createToken');
 const User = require('../models/userModel');
 
-// @desc    Signup
-// @route   GET /api/v1/auth/signup
-// @access  Public
+// Signup
+// GET /api/v1/auth/signup
 exports.signup = asyncHandler(async (req, res, next) => {
   const user = await User.create({
     name: req.body.name,
@@ -20,9 +19,8 @@ exports.signup = asyncHandler(async (req, res, next) => {
   res.status(201).json({ data: user, token });
 });
 
-// @desc    Login
-// @route   GET /api/v1/auth/login
-// @access  Public
+// Login
+// GET /api/v1/auth/login
 exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user || !(await bcrypt.compare(req.body.password, user.password))) return next(new ApiError('Incorrect email or password', 401));
@@ -31,7 +29,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: user, token });
 });
 
-// @desc   make sure the user is logged in
+// make sure the user is logged in
 exports.protect = asyncHandler(async (req, res, next) => {
   let token;
   if ( req.headers.authorization && req.headers.authorization.startsWith('Bearer') ) token = req.headers.authorization.split(' ')[1];
@@ -47,7 +45,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   next();
 });
 
-// @desc    Authorization (User Permissions)
+// Authorization (User Permissions)
 // ["admin", "manager"]
 exports.allowedTo = (...roles) =>
   asyncHandler(async (req, res, next) => {
@@ -55,9 +53,8 @@ exports.allowedTo = (...roles) =>
     next();
   });
 
-// @desc    Forgot password
-// @route   POST /api/v1/auth/forgotPassword
-// @access  Public
+// Forgot password
+// POST /api/v1/auth/forgotPassword
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) return next(new ApiError(`There is no user with that email ${req.body.email}`, 404));
@@ -82,9 +79,8 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   res.status(200).json({ status: 'Success', message: 'Reset code sent to email' });
 });
 
-// @desc    Verify password reset code
-// @route   POST /api/v1/auth/verifyResetCode
-// @access  Public
+// Verify password reset code
+// POST /api/v1/auth/verifyResetCode
 exports.verifyPassResetCode = asyncHandler(async (req, res, next) => {
   const hashedResetCode = crypto.createHash('sha256').update(req.body.resetCode).digest('hex');
   const user = await User.findOne({ passwordResetCode: hashedResetCode, passwordResetExpires: { $gt: Date.now() } });
@@ -94,9 +90,8 @@ exports.verifyPassResetCode = asyncHandler(async (req, res, next) => {
   res.status(200).json({status: 'Success'});
 });
 
-// @desc    Reset password
-// @route   POST /api/v1/auth/resetPassword
-// @access  Public
+// Reset password
+// POST /api/v1/auth/resetPassword
 exports.resetPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) return next(new ApiError(`There is no user with email ${req.body.email}`, 404));

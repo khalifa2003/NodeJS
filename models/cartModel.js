@@ -10,8 +10,11 @@ const cartSchema = new mongoose.Schema(
         price: Number,
       },
     ],
+    // Total cart price before discount
     totalCartPrice: Number,
+    // Total cart price after discount
     totalPriceAfterDiscount: Number,
+    // Cart owner (user)
     user: {type: mongoose.Schema.ObjectId, ref: 'User'},
   },
   { timestamps: true }

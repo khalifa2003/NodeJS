@@ -17,27 +17,25 @@ exports.createFilterObj = (req, res, next) => {
   next();
 };
 
-// @desc    Get list of subcategories
-// @route   GET /api/v1/subcategories
-// @access  Public
+// Get list of subcategories
+// GET /api/v1/subcategories
 exports.getSubCategories = factory.getAll(SubCategory);
 
-// @desc    Get specific subcategory by id
-// @route   GET /api/v1/subcategories/:id
-// @access  Public
+// Get specific subcategory by id
+// GET /api/v1/subcategories/:id
 exports.getSubCategory = factory.getOne(SubCategory);
 
-// @desc    Create subCategory
-// @route   POST  /api/v1/subcategories
-// @access  Private
+// Create subCategory
+// POST  /api/v1/subcategories
+// Private
 exports.createSubCategory = factory.createOne(SubCategory);
 
-// @desc    Update specific subcategory
-// @route   PUT /api/v1/subcategories/:id
-// @access  Private
+// Update specific subcategory
+// PUT /api/v1/subcategories/:id
+// Private
 exports.updateSubCategory = factory.updateOne(SubCategory);
 
-// @desc    Delete specific subCategory
-// @route   DELETE /api/v1/subcategories/:id
-// @access  Private
+// Delete specific subCategory
+// DELETE /api/v1/subcategories/:id
+// Private
 exports.deleteSubCategory = factory.deleteOne(SubCategory);

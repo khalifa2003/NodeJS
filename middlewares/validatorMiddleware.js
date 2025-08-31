@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const ApiError = require("../utils/apiError");
 
+// Middleware: return formatted validation errors as JSON
 const validatorMiddleware = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -18,6 +19,7 @@ const validatorMiddleware = (req, res, next) => {
   next();
 };
 
+// Middleware: throw ApiError when validation fails
 const validatorMiddlewareWithThrow = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -28,6 +30,7 @@ const validatorMiddlewareWithThrow = (req, res, next) => {
   next();
 };
 
+// Middleware: sanitize input (convert empty strings/"undefined" → null)
 const sanitizeInput = (req, res, next) => {
   const sanitizeObject = (obj) => {
     Object.keys(obj).forEach((key) => {
