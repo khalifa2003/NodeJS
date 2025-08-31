@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://node-js-blue-eight.vercel.app",
+        url: "http://localhost:3000",
       },
     ],
   },
@@ -21,7 +21,7 @@ const options = {
 const swaggerSpec = swaggerJsdoc(options);
 
 function swaggerDocs(app) {
-  app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
 
 module.exports = swaggerDocs;
