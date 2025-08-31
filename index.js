@@ -16,6 +16,7 @@ const dbConnection = require('./config/database');
 // Routes
 const mountRoutes = require('./routes');
 const { webhookCheckout } = require('./services/orderSerivce');
+const PORT = process.env.PORT || 3000;
 
 // Connect with db
 dbConnection();
@@ -39,10 +40,7 @@ app.post(
   express.raw({ type: 'application/json' }),
   webhookCheckout
 );
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-  console.log("Docs available at http://localhost:3000/api-docs");
-});
+
 // Middlewares
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(path.join(__dirname, 'uploads')));
@@ -88,11 +86,10 @@ app.all('*', (req, res, next) => {
 // Global error handling middleware for express
 app.use(globalError);
 
-const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
-  console.log(`App running running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on ${process.env.BASE_URL}`);
+  console.log(`Docs available at ${process.env.BASE_URL}/api-docs`);
 });
-
 // Handle rejection outside express
 process.on('unhandledRejection', (err) => {
   console.error(`UnhandledRejection Errors: ${err.name} | ${err.message}`);
