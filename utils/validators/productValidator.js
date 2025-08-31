@@ -41,7 +41,9 @@ exports.createProductValidator = [
     .withMessage('Product priceAfterDiscount must be a number')
     .toFloat()
     .custom((value, { req }) => {
-      if (req.body.price <= value) throw new Error('priceAfterDiscount must be lower than price');
+      if (req.body.price <= value) {
+        throw new Error('priceAfterDiscount must be lower than price');
+      }
       return true;
     }),
 
@@ -75,7 +77,11 @@ exports.createProductValidator = [
     .withMessage('Invalid ID formate')
     .custom((subcategoriesIds) =>
       SubCategory.find({ _id: { $exists: true, $in: subcategoriesIds } }).then(
-        (result) => { if (result.length < 1 || result.length !== subcategoriesIds.length) return Promise.reject(new Error(`Invalid subcategories Ids`)) }
+        (result) => {
+          if (result.length < 1 || result.length !== subcategoriesIds.length) {
+            return Promise.reject(new Error(`Invalid subcategories Ids`));
+          }
+        }
       )
     )
     .custom((val, { req }) =>
@@ -85,8 +91,13 @@ exports.createProductValidator = [
           subcategories.forEach((subCategory) => {
             subCategoriesIdsInDB.push(subCategory._id.toString());
           });
+          // check if subcategories ids in db include subcategories in req.body (true)
           const checker = (target, arr) => target.every((v) => arr.includes(v));
-          if (!checker(val, subCategoriesIdsInDB)) return Promise.reject(new Error(`subcategories not belong to category`));
+          if (!checker(val, subCategoriesIdsInDB)) {
+            return Promise.reject(
+              new Error(`subcategories not belong to category`)
+            );
+          }
         }
       )
     ),

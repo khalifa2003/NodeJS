@@ -31,6 +31,8 @@
     "sharp": "^0.29.3",
     "slugify": "^1.6.3",
     "stripe": "^8.212.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

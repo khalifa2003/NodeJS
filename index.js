@@ -1,6 +1,7 @@
 const path = require('path');
 
 const express = require('express');
+const swaggerDocs = require("./swagger");
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -22,6 +23,9 @@ dbConnection();
 // express app
 const app = express();
 
+// Swagger docs
+swaggerDocs(app);
+
 // Enable other domains to access your application
 app.use(cors());
 app.options('*', cors());
@@ -35,7 +39,10 @@ app.post(
   express.raw({ type: 'application/json' }),
   webhookCheckout
 );
-
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+  console.log("Docs available at http://localhost:3000/api-docs");
+});
 // Middlewares
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(path.join(__dirname, 'uploads')));
@@ -78,7 +85,7 @@ app.all('*', (req, res, next) => {
 // Global error handling middleware for express
 app.use(globalError);
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
   console.log(`App running running on port ${PORT}`);
 });
