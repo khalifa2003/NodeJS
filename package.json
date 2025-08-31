@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "22": "^0.0.0",
     "aws-sdk": "^2.1659.0",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
@@ -24,17 +25,16 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.13",
     "morgan": "^1.10.0",
-    "multer": "^1.4.4",
+    "multer": "^1.4.4-lts.1",
     "nodejs-ecommerce-api-v1": "file:",
     "nodemailer": "^6.7.2",
-    "rimraf": "^6.0.1",
     "sharp": "^0.29.3",
     "slugify": "^1.6.3",
     "stripe": "^8.212.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.5.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
@@ -43,7 +43,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "rimraf": "^6.0.1"
   },
   "engines": {
     "node": ">=22.0.0"
